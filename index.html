@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>HabeshaBingo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-circle">H</div>
+        <span>HabeshaBingo</span>
+      </div>
+      <div class="header-right">
+        <div class="balance-badge" id="balanceDisplay">0.00 ብር</div>
+        <button class="icon-btn" id="menuBtn">☰</button>
+      </div>
+    </header>
+
+    <!-- Main Screens -->
+    <main id="mainContent">
+      <!-- HOME / ROOM SELECTION -->
+      <section id="homeScreen" class="screen active">
+        <div class="hero">
+          <div class="hero-logo">H</div>
+          <h1>HabeshaBingo</h1>
+          <p>የቢንጎ ጨዋታውን ጀምር</p>
+        </div>
+
+        <div class="room-list">
+          <button class="room-card" data-room="play10">
+            <div class="room-icon">🎮</div>
+            <div class="room-info">
+              <h3>PLAY | 10 ብር</h3>
+              <p>መደበኛ ክፍል</p>
+            </div>
+            <div class="room-arrow">›</div>
+          </button>
+
+          <button class="room-card" data-room="super50">
+            <div class="room-icon">⭐</div>
+            <div class="room-info">
+              <h3>SuperBingo | 50 ብር</h3>
+              <p>ከፍተኛ ሽልማት</p>
+            </div>
+            <div class="room-arrow">›</div>
+          </button>
+
+          <button class="room-card bonus" data-room="bonus">
+            <div class="room-icon">🏆</div>
+            <div class="room-info">
+              <h3>HabeshaBingo Bonus</h3>
+              <p>የጨዋታ ትንበያ</p>
+            </div>
+            <div class="room-arrow">›</div>
+          </button>
+        </div>
+
+        <div class="quick-actions">
+          <button class="action-btn" id="btnBalance">💰 ሂሳቤ</button>
+          <button class="action-btn" id="btnDeposit">📥 ገንዘብ አስገባ</button>
+          <button class="action-btn" id="btnWithdraw">📤 ገንዘብ አውጣ</button>
+          <button class="action-btn" id="btnHistory">📋 ታሪክ</button>
+        </div>
+      </section>
+
+      <!-- CARD BUYING SCREEN -->
+      <section id="buyScreen" class="screen">
+        <div class="buy-header">
+          <button class="back-btn" id="backFromBuy">‹</button>
+          <div class="buy-stats">
+            <div class="stat yellow">ROOM <span id="roomName">VIP</span></div>
+            <div class="stat">SOLD <span id="soldCount">0</span></div>
+            <div class="stat dark">TIME <span id="buyTimer">30s</span></div>
+            <div class="stat green">BALANCE <span id="buyBalance">0.00</span></div>
+          </div>
+        </div>
+
+        <div class="card-grid-container">
+          <div class="card-grid" id="cardGrid"></div>
+        </div>
+
+        <div class="selected-slots">
+          <div class="slot" id="slot1">
+            <span class="slot-plus">+</span>
+            <span class="slot-label">SLOT 1 EMPTY</span>
+          </div>
+          <div class="slot" id="slot2">
+            <span class="slot-plus">+</span>
+            <span class="slot-label">SLOT 2 EMPTY</span>
+          </div>
+        </div>
+
+        <button class="primary-btn" id="confirmBuy" disabled>ካርድ ግዛ</button>
+      </section>
+
+      <!-- LIVE GAME SCREEN -->
+      <section id="gameScreen" class="screen">
+        <div class="game-top">
+          <div class="prize">
+            <span class="label">DERASH</span>
+            <span class="value" id="prizeAmount">0</span>
+            <span class="currency">ETB</span>
+          </div>
+          <div class="balls-info">
+            <span>BALLS</span>
+            <strong id="ballsCount">0/75</strong>
+          </div>
+          <div class="players-info">
+            <span>PLAYERS</span>
+            <strong id="playersCount">0</strong>
+          </div>
+          <div class="current-ball" id="currentBall">
+            <span class="ball-letter">-</span>
+            <span class="ball-number">-</span>
+          </div>
+        </div>
+
+        <div class="bingo-board-wrapper">
+          <div class="bingo-header">
+            <span class="col b">B</span>
+            <span class="col i">I</span>
+            <span class="col n">N</span>
+            <span class="col g">G</span>
+            <span class="col o">O</span>
+          </div>
+          <div class="bingo-board" id="bingoBoard"></div>
+        </div>
+
+        <div class="called-balls" id="calledBalls"></div>
+
+        <div class="game-status" id="gameStatus">
+          <div class="hourglass">⏳</div>
+          <p>GAME IN PROGRESS</p>
+          <small>PLEASE WAIT FOR THE NEXT BUYING ROUND TO JOIN.</small>
+        </div>
+
+        <div class="my-cards" id="myCards"></div>
+      </section>
+
+      <!-- WINNER SCREEN -->
+      <section id="winnerScreen" class="screen">
+        <div class="winner-card">
+          <div class="winner-badge">1 አሸናፊ</div>
+          <div class="prize-big" id="winnerPrize">0 ETB</div>
+          <h2 id="winnerName">--- has won!</h2>
+          <div class="total-pool">
+            <span>TOTAL PRIZE POOL</span>
+            <strong id="totalPool">0 ETB</strong>
+          </div>
+          <div class="winner-card-preview" id="winnerCardPreview"></div>
+          <div class="next-round">
+            <span>NEXT ROUND:</span>
+            <div class="progress-bar">
+              <div class="progress" id="nextRoundProgress"></div>
+            </div>
+            <span id="nextRoundTimer">30s</span>
+          </div>
+          <button class="primary-btn" id="backToHome">ወደ መነሻ ተመለስ</button>
+        </div>
+      </section>
+
+      <!-- BONUS SCREEN -->
+      <section id="bonusScreen" class="screen">
+        <div class="bonus-header">
+          <button class="back-btn" id="backFromBonus">‹</button>
+          <h2>HabeshaBingo Bonus</h2>
+        </div>
+        <div class="no-match">
+          <div class="sleep">💤</div>
+          <h3>No Active Matches</h3>
+          <p>የአስተናጋጁ የዓለም ዋንጫ ትንበያ ጨዋታ ገና አልተዘጋጀም። ቀጥለው ይመልከቱ!</p>
+        </div>
+        <div class="history-section">
+          <h3>📋 MATCH PREDICTION HISTORY</h3>
+          <div id="matchHistory"></div>
+        </div>
+      </section>
+
+      <!-- BALANCE / DEPOSIT / WITHDRAW MODALS -->
+      <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal" id="modalContent"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
